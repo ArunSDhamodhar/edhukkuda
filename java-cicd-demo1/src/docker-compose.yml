@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+
+web:
+
+image: ${DOCKER_USERNAME}/demo-app:${BUILD_NUMBER}
+
+ports:
+
+- "8081:8080"
+
