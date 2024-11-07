@@ -5,9 +5,13 @@ agent any
 
 environment {
 
+PATH = "/usr/local/bin:${env.PATH}" // Adjust if necessary
+
 DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // Replace with your Docker ID credentials
 
 DOCKER_USERNAME = 'arunsdhamodhar' // Replace with your Docker Hub username
+
+
 
 }
 
