@@ -11,17 +11,7 @@ DOCKER_USERNAME = 'arunsdhamodhar' // Replace with your Docker Hub username
 
 }
 
-  environment {
-        PATH = "/usr/local/bin:${env.PATH}" // Adjust if necessary
-    }
-
-    stages {
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t arunsdhamodhar/demo-app:16 .'
-            }
-        }
-    }
+  
  tools {
         maven 'Maven 3.x' // Use the name you provided in Global Tool Configuration
     }
