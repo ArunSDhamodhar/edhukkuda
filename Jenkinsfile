@@ -11,6 +11,9 @@ DOCKER_USERNAME = 'arunsdhamodhar' // Replace with your Docker Hub username
 
 }
 
+ tools {
+        maven 'Maven 3.x' // Use the name you provided in Global Tool Configuration
+    }
 
 stages {
 
