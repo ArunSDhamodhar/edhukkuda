@@ -19,21 +19,7 @@ DOCKER_USERNAME = 'arunsdhamodhar' // Replace with your Docker Hub username
  tools {
         maven 'Maven 3.x' // Use the name you provided in Global Tool Configuration
     }
-stages {
-        stage('Front-end') {
-            agent {
-                docker { 
-                    image 'node:8-alpine'
-                    registryUrl 'https://index.docker.io/v1/'
-                    label "test-env"
 
-                }
-            }
-            steps {
-                sh 'node --version'
-            }
-        }
-    }
   
 stages {
 
