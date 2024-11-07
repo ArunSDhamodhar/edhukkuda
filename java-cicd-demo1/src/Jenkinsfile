@@ -7,7 +7,7 @@ environment {
 
 DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // Replace with your Docker ID credentials
 
-DOCKER_USERNAME = 'your-docker-username' // Replace with your Docker Hub username
+DOCKER_USERNAME = 'arunsdhamodhar' // Replace with your Docker Hub username
 
 }
 
