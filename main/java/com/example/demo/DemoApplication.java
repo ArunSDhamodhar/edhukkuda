@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-public class Application {
+public class DemoApplication {
 
     // This method should be public and annotated with @GetMapping to be accessible via HTTP
     @GetMapping("/")
