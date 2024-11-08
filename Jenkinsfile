@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         PATH = "/usr/local/bin:${env.PATH}" // Adjust if necessary
-        DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // Replace with your Docker ID credentials
+        DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // Replace with your Docker Hub credentials ID
         DOCKER_USERNAME = 'arunsdhamodhar' // Replace with your Docker Hub username
     }
 
@@ -14,28 +14,28 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                checkout scm // Checkout the source code from the configured SCM
             }
         }
 
         stage('Build') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                sh 'mvn clean package -DskipTests' // Build the project and skip tests
             }
         }
 
         stage('Test') {
             steps {
-                sh 'mvn test'
+                sh 'mvn test' // Run tests
             }
         }
 
         stage('Docker Login') {
             steps {
-                withCredentials([string(credentialsId: 'mytoken', variable: 'TOKEN')]) {
+                withCredentials([string(credentialsId: 'mytoken', variable: 'TOKEN')]) { // Use Jenkins credentials for Docker login
                     sh '''
+                        echo "Logging into Docker..."
                         docker login -u '${DOCKER_USERNAME}' -p "$TOKEN"
-                        node --version
                     '''
                 }
             }
@@ -44,7 +44,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKER_USERNAME}/demo-app:${BUILD_NUMBER}")
+                    echo "Building Docker image..."
+                    def dockerImage = docker.build("${DOCKER_USERNAME}/demo-app:${env.BUILD_NUMBER}") // Build the Docker image
                 }
             }
         }
@@ -52,28 +53,35 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
+                    echo "Pushing Docker image to Docker Hub..."
                     docker.withRegistry('https://registry.hub.docker.com', DOCKER_CREDENTIALS_ID) {
-                        docker.image("${DOCKER_USERNAME}/demo-app:${BUILD_NUMBER}").push()
+                        docker.image("${DOCKER_USERNAME}/demo-app:${env.BUILD_NUMBER}").push() // Push the image to Docker Hub
+                        docker.image("${DOCKER_USERNAME}/demo-app:${env.BUILD_NUMBER}").push("latest") // Optionally push as latest
                     }
                 }
             }
         }
 
         stage('Deploy') {
-    steps {
-        script {
-            // Clone the deployment repository
-            sh 'git clone https://github.com/yourusername/microservices-deployment.git'
-            dir('microservices-deployment') {
-                // Run Docker Compose to start services
-                sh 'docker-compose up -d'
+            steps {
+                script {
+                    echo "Cloning deployment repository..."
+                    sh 'git clone https://github.com/ArunSDhamodhar/microservices-deployment.git' // Clone the deployment repo
+                    dir('microservices-deployment') { // Change directory to the cloned repo
+                        echo "Running Docker Compose to start services..."
+                        sh 'docker-compose up -d' // Start services using Docker Compose
+                    }
+                }
             }
         }
     }
-}
+
     post {
         always {
-            sh 'docker-compose down'
+            script {
+                echo "Tearing down services..."
+                sh 'docker-compose down' // Stop and remove containers defined in the Compose file
+            }
         }
     }
 }
