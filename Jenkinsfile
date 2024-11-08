@@ -88,16 +88,9 @@ pipeline {
     post {
         always {
             script {
-                echo "Tearing down services..."
-                if (fileExists('microservices-deployment/docker-compose.yml')) { // Check if docker-compose.yml exists
-                    dir('microservices-deployment') { // Change to the correct directory
-                        sh 'docker-compose down' // Stop and remove containers defined in the Compose file
-                    }
-                } else {
-                    echo "Warning: docker-compose.yml not found in 'microservices-deployment'. Skipping teardown."
-                }
+                echo "Skipping teardown of services." // Optional message indicating teardown is skipped.
             }
         }
-    } // End of post actions
+    } // End of post actions (no teardown logic)
 
 } // End of pipeline
