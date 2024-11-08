@@ -30,16 +30,7 @@ pipeline {
             }
         }
 
-        stage('Docker Login') {
-            steps {
-                withCredentials([string(credentialsId: 'docker-hub-credentials', variable: 'TOKEN')]) { // Use Jenkins credentials for Docker login
-                    sh '''
-                        echo "Logging into Docker..."
-                        docker login -u '${DOCKER_USERNAME}' -p "$TOKEN"
-                    '''
-                }
-            }
-        }
+       
 
         stage('Docker Login') {
     steps {
