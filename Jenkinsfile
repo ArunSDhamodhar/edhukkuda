@@ -35,7 +35,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh '''
                         echo "Logging into Docker..."
-                        docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
                     '''
                 }
             }
@@ -85,14 +85,19 @@ pipeline {
 
     } // End of stages
 
-  post {
-    always {
-        script {
-            echo "Tearing down services..."
-            dir('microservices-deployment') { // Change to the correct directory
-                sh 'docker-compose down' // Stop and remove containers defined in the Compose file
+    post {
+        always {
+            script {
+                echo "Tearing down services..."
+                if (fileExists('microservices-deployment/docker-compose.yml')) { // Check if docker-compose.yml exists
+                    dir('microservices-deployment') { // Change to the correct directory
+                        sh 'docker-compose down' // Stop and remove containers defined in the Compose file
+                    }
+                } else {
+                    echo "Warning: docker-compose.yml not found in 'microservices-deployment'. Skipping teardown."
+                }
             }
         }
-    }
-}
- End of pipeline
+    } // End of post actions
+
+} // End of pipeline
