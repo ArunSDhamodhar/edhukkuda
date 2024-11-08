@@ -30,19 +30,16 @@ pipeline {
             }
         }
 
-       
-
         stage('Docker Login') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials' , usernameVariable: 'arunsdhamodhar', passwordVariable: 'Polarbear@123')]) {
-            sh '''
-                echo "Logging into Docker..."
-                docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-            '''
+            steps {
+                withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh '''
+                        echo "Logging into Docker..."
+                        docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+                    '''
+                }
+            }
         }
-    }
-}
-
 
         stage('Build Docker Image') {
             steps {
@@ -69,7 +66,7 @@ pipeline {
             steps {
                 script {
                     echo "Cloning deployment repository..."
-                    sh 'git clone https://github.com/ArunSDhamodhar/microservices-deployment.git' // Clone the deployment repo
+                    sh 'git clone https://github.com/yourusername/microservices-deployment.git' // Clone the deployment repo
                     dir('microservices-deployment') { // Change directory to the cloned repo
                         echo "Running Docker Compose to start services..."
                         sh 'docker-compose up -d' // Start services using Docker Compose
