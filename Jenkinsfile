@@ -60,12 +60,17 @@ pipeline {
         }
 
         stage('Deploy') {
-            steps {
+    steps {
+        script {
+            // Clone the deployment repository
+            sh 'git clone https://github.com/yourusername/microservices-deployment.git'
+            dir('microservices-deployment') {
+                // Run Docker Compose to start services
                 sh 'docker-compose up -d'
             }
         }
     }
-
+}
     post {
         always {
             sh 'docker-compose down'
