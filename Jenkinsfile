@@ -66,7 +66,7 @@ pipeline {
             steps {
                 script {
                     echo "Cloning deployment repository..."
-                    sh 'git clone https://github.com/yourusername/microservices-deployment.git' // Clone the deployment repo
+                    sh 'git clone https://github.com/ArunSDhamodhar/microservices-deployment.git' // Clone the deployment repo
                     dir('microservices-deployment') { // Change directory to the cloned repo
                         echo "Running Docker Compose to start services..."
                         sh 'docker-compose up -d' // Start services using Docker Compose
