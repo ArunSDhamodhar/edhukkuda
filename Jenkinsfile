@@ -85,12 +85,14 @@ pipeline {
 
     } // End of stages
 
-    post {
-        always {
-            script {
-                echo "Tearing down services..."
+  post {
+    always {
+        script {
+            echo "Tearing down services..."
+            dir('microservices-deployment') { // Change to the correct directory
                 sh 'docker-compose down' // Stop and remove containers defined in the Compose file
             }
         }
-    } // End of post actions
-} // End of pipeline
+    }
+}
+ End of pipeline
