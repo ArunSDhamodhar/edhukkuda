@@ -62,19 +62,26 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                script {
-                    echo "Cloning deployment repository..."
-                    sh 'git clone https://github.com/ArunSDhamodhar/microservices-deployment.git' // Clone the deployment repo
-                    dir('microservices-deployment') { // Change directory to the cloned repo
-                        echo "Running Docker Compose to start services..."
-                        sh 'docker-compose up -d' // Start services using Docker Compose
-                    }
-                }
+      stage('Deploy') {
+    steps {
+        script {
+            echo "Cloning deployment repository..."
+            // Remove existing directory if it exists
+            sh '''
+                if [ -d "microservices-deployment" ]; then
+                    echo "Removing existing microservices-deployment directory..."
+                    rm -rf microservices-deployment
+                fi
+                git clone https://github.com/ArunSDhamodhar/microservices-deployment.git
+            ''' // Clone the deployment repo
+
+            dir('microservices-deployment') { // Change directory to the cloned repo
+                echo "Running Docker Compose to start services..."
+                sh 'docker-compose up -d' // Start services using Docker Compose
             }
         }
     }
+}
 
     post {
         always {
