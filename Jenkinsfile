@@ -41,6 +41,18 @@ pipeline {
             }
         }
 
+        stage('Docker Login') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials' , usernameVariable: 'arunsdhamodhar', passwordVariable: 'Polarbear@123')]) {
+            sh '''
+                echo "Logging into Docker..."
+                docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+            '''
+        }
+    }
+}
+
+
         stage('Build Docker Image') {
             steps {
                 script {
