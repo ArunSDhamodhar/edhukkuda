@@ -62,26 +62,28 @@ pipeline {
             }
         }
 
-      stage('Deploy') {
-    steps {
-        script {
-            echo "Cloning deployment repository..."
-            // Remove existing directory if it exists
-            sh '''
-                if [ -d "microservices-deployment" ]; then
-                    echo "Removing existing microservices-deployment directory..."
-                    rm -rf microservices-deployment
-                fi
-                git clone https://github.com/ArunSDhamodhar/microservices-deployment.git
-            ''' // Clone the deployment repo
+        stage('Deploy') { // Start of Deploy stage
+            steps {
+                script {
+                    echo "Cloning deployment repository..."
+                    // Remove existing directory if it exists
+                    sh '''
+                        if [ -d "microservices-deployment" ]; then
+                            echo "Removing existing microservices-deployment directory..."
+                            rm -rf microservices-deployment
+                        fi
+                        git clone https://github.com/ArunSDhamodhar/microservices-deployment.git
+                    ''' // Clone the deployment repo
 
-            dir('microservices-deployment') { // Change directory to the cloned repo
-                echo "Running Docker Compose to start services..."
-                sh 'docker-compose up -d' // Start services using Docker Compose
+                    dir('microservices-deployment') { // Change directory to the cloned repo
+                        echo "Running Docker Compose to start services..."
+                        sh 'docker-compose up -d' // Start services using Docker Compose
+                    }
+                }
             }
-        }
-    }
-}
+        } // End of Deploy stage
+
+    } // End of stages
 
     post {
         always {
@@ -90,5 +92,5 @@ pipeline {
                 sh 'docker-compose down' // Stop and remove containers defined in the Compose file
             }
         }
-    }
-
+    } // End of post actions
+} // End of pipeline
